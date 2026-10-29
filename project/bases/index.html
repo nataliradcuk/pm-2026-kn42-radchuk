@@ -222,8 +222,9 @@
     }
 
     get("baseForm").onsubmit = event => {
-      event.preventDefault();
-      const name = get("baseName").value.trim();
+       event.preventDefault();
+       get("message").textContent = "";
+       const name = get("baseName").value.trim();
       const contact = get("baseContact").value.trim();
       const errors = [];
 
