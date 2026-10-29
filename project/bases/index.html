@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Бази практики</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fa;
+      color: #243047;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    section {
+      background: white;
+      padding: 24px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+    }
+    label { display: block; margin: 14px 0; }
+    input:not([type="checkbox"]), select {
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border: 1px solid #aab4c4;
+      border-radius: 7px;
+    }
+    button {
+      padding: 10px 14px;
+      margin: 4px;
+      cursor: pointer;
+      border: 1px solid #aab4c4;
+      border-radius: 7px;
+      background: white;
+    }
+    button[type="submit"] {
+      background: #2856ce;
+      color: white;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    .error { color: #a31919; }
+    .table-wrap { overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>Бази практики</h1>
+  <p>
+    Навчальний прототип. Дані зберігаються лише в цьому браузері.
+    Вхід і перевірка ролі адміністратора тут не реалізовані.
+  </p>
+
+  <section>
+    <h2 id="formTitle">Додати базу</h2>
+    <form id="baseForm" novalidate>
+      <label>
+        Назва організації
+        <input id="baseName" type="text">
+      </label>
+      <label>
+        Контактна адреса
+        <input id="baseContact" type="text">
+      </label>
+      <label>
+        <input id="baseActive" type="checkbox" checked>
+        Активна база
+      </label>
+      <p id="error" class="error" role="alert"></p>
+      <button type="submit">Зберегти</button>
+      <button type="button" id="cancel">Скасувати</button>
+    </form>
+    <p id="message" role="status"></p>
+  </section>
+
+  <section>
+    <h2>Перелік баз</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Назва</th>
+            <th>Контакт</th>
+            <th>Стан</th>
+            <th>Дії</th>
+          </tr>
+        </thead>
+        <tbody id="baseRows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Перевірка вибору бази для заявки</h2>
+    <p>У цьому списку доступні тільки активні бази.</p>
+    <label>
+      База практики
+      <select id="applicationBase"></select>
+    </label>
+    <button id="createApplication">Створити тестову заявку</button>
+
+    <h3>Тестові заявки</h3>
+    <ul id="applications"></ul>
+  </section>
+
+  <script>
+    const storageKey = "practice-bases-prototype-v1";
+    const get = id => document.getElementById(id);
+    let editingId = null;
+    let data = { bases: [], applications: [] };
+
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey));
+      if (saved &&
+          Array.isArray(saved.bases) &&
+          Array.isArray(saved.applications)) {
+        data = saved;
+      }
+    } catch {
+      get("message").textContent =
+        "Не вдалося прочитати збережені дані.";
+    }
+
+    function save() {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(data));
+        return true;
+      } catch {
+        get("message").textContent =
+          "Не вдалося зберегти дані після перезавантаження сторінки.";
+        return false;
+      }
+    }
+
+    function resetForm() {
+      editingId = null;
+      get("baseForm").reset();
+      get("baseActive").checked = true;
+      get("formTitle").textContent = "Додати базу";
+      get("error").textContent = "";
+    }
+
+    function render() {
+      get("baseRows").replaceChildren();
+      get("applicationBase").replaceChildren();
+
+      const placeholder = new Option("Оберіть базу", "");
+      get("applicationBase").add(placeholder);
+
+      for (const base of data.bases) {
+        const row = document.createElement("tr");
+
+        for (const value of [
+          base.name,
+          base.contact,
+          base.active ? "Активна" : "Неактивна"
+        ]) {
+          const cell = document.createElement("td");
+          cell.textContent = value;
+          row.append(cell);
+        }
+
+        const actions = document.createElement("td");
+        const edit = document.createElement("button");
+        edit.textContent = "Редагувати";
+        edit.onclick = () => {
+          editingId = base.id;
+          get("baseName").value = base.name;
+          get("baseContact").value = base.contact;
+          get("baseActive").checked = base.active;
+          get("formTitle").textContent = "Редагувати базу";
+          get("error").textContent = "";
+          get("baseName").focus();
+        };
+
+        const toggle = document.createElement("button");
+        toggle.textContent = base.active ? "Вимкнути" : "Увімкнути";
+        toggle.onclick = () => {
+          base.active = !base.active;
+          const saved = save();
+          render();
+          get("message").textContent = saved
+            ? "Стан бази збережено. Попередні заявки залишилися."
+            : "Стан змінено лише до закриття сторінки.";
+        };
+
+        actions.append(edit, toggle);
+        row.append(actions);
+        get("baseRows").append(row);
+
+        if (base.active) {
+          get("applicationBase").add(
+            new Option(base.name, base.id)
+          );
+        }
+      }
+
+      get("applications").replaceChildren();
+
+      for (const application of data.applications) {
+        const base = data.bases.find(
+          item => item.id === application.baseId
+        );
+        const item = document.createElement("li");
+        item.textContent =
+          `${application.student}: ${base ? base.name : "Базу не знайдено"}`;
+        get("applications").append(item);
+      }
+
+      if (!data.applications.length) {
+        const item = document.createElement("li");
+        item.textContent = "Тестових заявок поки немає.";
+        get("applications").append(item);
+      }
+    }
+
+    get("baseForm").onsubmit = event => {
+      event.preventDefault();
+      const name = get("baseName").value.trim();
+      const contact = get("baseContact").value.trim();
+      const errors = [];
+
+      if (!name) errors.push("Вкажіть назву.");
+      if (!contact) errors.push("Вкажіть контактну адресу.");
+
+      get("error").textContent = errors.join(" ");
+      if (errors.length) return;
+
+      if (editingId !== null) {
+        const base = data.bases.find(item => item.id === editingId);
+        base.name = name;
+        base.contact = contact;
+        base.active = get("baseActive").checked;
+      } else {
+        data.bases.push({
+          id: crypto.randomUUID(),
+          name,
+          contact,
+          active: get("baseActive").checked
+        });
+      }
+
+      const saved = save();
+      resetForm();
+      render();
+      get("message").textContent = saved
+        ? "Базу збережено."
+        : "Базу додано лише до закриття сторінки.";
+    };
+
+    get("cancel").onclick = resetForm;
+
+    get("createApplication").onclick = () => {
+      const base = data.bases.find(
+        item => item.id === get("applicationBase").value && item.active
+      );
+
+      if (!base) {
+        get("message").textContent = "Спочатку оберіть активну базу.";
+        return;
+      }
+
+      data.applications.push({
+        id: crypto.randomUUID(),
+        baseId: base.id,
+        student: "Тестовий студент"
+      });
+
+      const saved = save();
+      render();
+      get("message").textContent = saved
+        ? "Тестову заявку збережено."
+        : "Заявку додано лише до закриття сторінки.";
+    };
+
+    render();
+  </script>
+</body>
+</html>
