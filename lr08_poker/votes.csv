@@ -35,3 +35,6 @@ S-08,1,likely,5
 S-10,1,optimistic,2
 S-10,1,pessimistic,5
 S-10,1,likely,3
+S-17,2,optimistic,3
+S-17,2,pessimistic,8
+S-17,2,likely,5
