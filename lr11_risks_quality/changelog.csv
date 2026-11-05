@@ -1,1 +1,2 @@
 change_id,date,source,description,story_ids,points_delta,decision,rationale,affected_files
+CH-01,2026-11-05,own_decision,Підготовлено спільний DoD для вимог текстових прототипів і сценаріїв перевірки,S-01;S-11;S-03;S-06;S-07;S-10,0,accepted,Потрібен однаковий порядок перевірки повного потоку та відповідності беклогу; функціональний обсяг першого релізу не змінюється,lr11_risks_quality/dod.md;lr11_risks_quality/README.md
