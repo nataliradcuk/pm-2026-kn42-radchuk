@@ -1,1 +1,5 @@
 role,fte,hours,rate,source,note
+PM,0.25,80,348,https://dou.ua/lenta/articles/salary-report-managers-winter-2026/,Орієнтир Middle Project Manager 2000 доларів; ставка масштабована відносно Dev
+BA,0.5,160,435,https://dou.ua/lenta/articles/salary-report-data-winter-2026/,Орієнтир Business Analyst 2500 доларів; ставка масштабована відносно Dev
+Dev,2,640,600,https://dou.ua/lenta/articles/salary-report-devs-winter-2026/,Два розробники по 100%; орієнтир медіана 3450 доларів; базова ставка навчального кошторису
+QA,0.5,160,391,https://dou.ua/lenta/articles/salary-report-qa-winter-2026/,Орієнтир медіана QA 2250 доларів; ставка масштабована відносно Dev
