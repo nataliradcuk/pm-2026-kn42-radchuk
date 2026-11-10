@@ -9,3 +9,4 @@ ST-07,PM (я),Команда проєкту,high,high,supporter,manage_closely,P
 ST-08,BA (бізнес-аналітик),Команда проєкту,high,low,supporter,keep_informed,PM
 ST-09,Dev (розробник),Команда проєкту,high,low,supporter,keep_informed,PM
 ST-10,QA (інженер з якості),Команда проєкту,high,low,supporter,keep_informed,PM
+ST-11,Служба інформаційної безпеки академії,Академія,high,high,neutral,manage_closely,PM
