@@ -7,8 +7,8 @@
 | Підгрупа | КН-42 |
 | Тема | 6. Платформа обліку практик і стажувань |
 | Варіант вхідних умов | V11 |
-| Трекер | посилання |
-| Дошка | посилання |
+| Трекер | https://github.com/nataliradcuk/pm-2026-kn42-radchuk/issues |
+| Дошка | https://github.com/users/nataliradcuk/projects/1|
 | Валюта проєкту | грн |
 | Contingency, % | 12 |
 
