@@ -1,1 +1,5 @@
 run_id,date,tool,goal,artifact,has_input,iterations,result,note
+P-01,2026-11-22,ChatGPT,Структурувати нотатки зустрічі,lr17_ai_assistant/tasks.csv,yes,1,used_with_edits,Підготовлено початковий перелік
+P-02,2026-11-22,ChatGPT,Уточнити перелік і походження пунктів,lr17_ai_assistant/tasks.csv,yes,2,used_with_edits,Уточнено після отримання ручного списку
+P-03,2026-11-22,ChatGPT,Підготувати premortem з десяти причин,lr17_ai_assistant/README.md,yes,1,used_with_edits,Результат включено до README
+P-04,2026-11-22,ChatGPT,Підготувати ризик для іншого артефакту портфеля,lr11_risks_quality/risks.csv,yes,1,used_with_edits,Підготовлено R-08 за N-09
